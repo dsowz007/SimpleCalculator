@@ -1,3 +1,8 @@
+// TODO
+// implement proper division
+// simplify fractions and add ability to input fractions
+// sin() cos() and tan() functions
+// optimize code and make it cleaner
 
 #include "math.h"
 #include "mainwindow.h"
