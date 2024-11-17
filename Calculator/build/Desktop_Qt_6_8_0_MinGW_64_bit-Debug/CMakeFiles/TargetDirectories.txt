@@ -1,0 +1,9 @@
+F:/Projects/Calculator/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/Calculator.dir
+F:/Projects/Calculator/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/edit_cache.dir
+F:/Projects/Calculator/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/rebuild_cache.dir
+F:/Projects/Calculator/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/list_install_components.dir
+F:/Projects/Calculator/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/install.dir
+F:/Projects/Calculator/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/install/local.dir
+F:/Projects/Calculator/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/install/strip.dir
+F:/Projects/Calculator/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/Calculator_autogen_timestamp_deps.dir
+F:/Projects/Calculator/build/Desktop_Qt_6_8_0_MinGW_64_bit-Debug/CMakeFiles/Calculator_autogen.dir
