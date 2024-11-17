@@ -1,8 +1,11 @@
 // TODO
-// implement proper division
 // simplify fractions and add ability to input fractions
 // sin() cos() and tan() functions
 // optimize code and make it cleaner
+
+//KNOWN PROBLEMS
+//--Using the deleteButton to remove previousAns(Ans) causes unintended behavior
+//  The calculator still thinks Ans is apart of the input instead of removing it
 
 #include "math.h"
 #include "mainwindow.h"
@@ -26,14 +29,27 @@ CalcOperator sign = none;
 QString printedNumValue = "";
 QString valueHalf = "";
 std::array<QString, 4> savedCalculations = {};
-int previousAns = 0;
-int value1 = 0;
-int value2 = 0;
-int answer = 0;
+double previousAns = 0;
+double value1 = 0;
+double value2 = 0;
+double answer = 0;
+bool zeroCount = false;
+bool checkAns1 = false;
+bool checkAns2 = false;
 bool checkNegative1 = false;
 bool checkNegative2 = false;
 bool checkOperator = false;
 
+
+void MainWindow::clear_values(){
+    checkOperator = false;
+    checkNegative1 = false;
+    checkNegative2 = false;
+    zeroCount = false;
+    value1 = 0;
+    value2 = 0;
+    printedNumValue = "";
+}
 
 void MainWindow::on_numberOne_clicked()
 {
@@ -208,6 +224,8 @@ void MainWindow::on_numberNine_clicked()
 
 void MainWindow::on_numberZero_clicked()
 {
+    if(value1 == 0 && !checkOperator)
+        zeroCount = true;
     static const int textZero = 0;
    // previousInput = textZero;
 
@@ -226,6 +244,7 @@ void MainWindow::on_numberZero_clicked()
 
 void MainWindow::on_previousAnswerButton_clicked()
 {
+    checkAns2 = true;
     //check if value1 or value2
     if(!checkOperator){
         value1 = previousAns;
@@ -292,7 +311,7 @@ void MainWindow::on_deleteButton_clicked()
         }
         ui->inputDisplay->setText(printedNumValue);
     } else if(checkOperator == true) {
-        int previousInput = value2 % 10;
+        double previousInput = std::fmod(value2, 10.0);
         value2 -= previousInput;
         value2 /= 10.0;
         if(value2 == 0){
@@ -306,12 +325,13 @@ void MainWindow::on_deleteButton_clicked()
         }
         ui->inputDisplay->setText(printedNumValue);
     } else {
-        int previousInput = value1 % 10;
+        double previousInput = std::fmod(value1, 10.0);
         value1 -= previousInput;
         value1 /= 10;
         //check if the first number was deleted, then reset
         if(value1 == 0){
             checkNegative1 = false;
+            zeroCount = false;
             printedNumValue = "";
             ui->inputDisplay->setText("");
         } else {
@@ -326,26 +346,16 @@ void MainWindow::on_deleteButton_clicked()
 
 void MainWindow::on_clearButton_clicked()
 {
-    checkOperator = false;
-    checkNegative1 = false;
-    checkNegative2 = false;
-    value1 = 0;
-    value2 = 0;
-    //previousInput = 0;
-    printedNumValue = "";
+    clear_values();
     ui->inputDisplay->setText(printedNumValue);
 }
 
 void MainWindow::on_allClearButton_clicked()
 {
-    checkOperator = false;
-    checkNegative1 = false;
-    checkNegative2 = false;
-    value1 = 0;
-    value2 = 0;
+    clear_values();
     previousAns = 0;
-    //previousInput = 0;
-    printedNumValue = "";
+    checkAns1 = false;
+    checkAns2 = false;
     ui->inputDisplay->setText(printedNumValue);
 
     for(int i = 0; i < savedCalculations.size(); ++i){
@@ -362,6 +372,8 @@ void MainWindow::on_plusSign_clicked()
 {
     sign = plus;
     checkOperator = true;
+    if(!zeroCount && value1 == 0 && !checkAns2)
+        printedNumValue = '0';
     printedNumValue = printedNumValue + " + ";
     valueHalf = printedNumValue;
     ui->inputDisplay->setText(printedNumValue);
@@ -371,6 +383,8 @@ void MainWindow::on_minusSign_clicked()
 {
     sign = minus;
     checkOperator = true;
+    if(!zeroCount && value1 == 0)
+        printedNumValue = '0';
     printedNumValue = printedNumValue + " - ";
     valueHalf = printedNumValue;
     ui->inputDisplay->setText(printedNumValue);
@@ -380,6 +394,8 @@ void MainWindow::on_multiplySign_clicked()
 {
     sign = multiply;
     checkOperator = true;
+    if(!zeroCount && value1 == 0)
+        printedNumValue = '0';
     printedNumValue = printedNumValue + " x ";
     valueHalf = printedNumValue;
     ui->inputDisplay->setText(printedNumValue);
@@ -389,6 +405,8 @@ void MainWindow::on_divideSign_clicked()
 {
     sign = divide;
     checkOperator = true;
+    if(!zeroCount && value1 == 0)
+        printedNumValue = '0';
     printedNumValue = printedNumValue + " ÷ ";
     valueHalf = printedNumValue;
     ui->inputDisplay->setText(printedNumValue);
@@ -396,6 +414,15 @@ void MainWindow::on_divideSign_clicked()
 
 void MainWindow::on_equalsSign_clicked()
 {
+    //check if Ans was entered without a previous Ans
+    if(!checkAns1 && checkAns2)
+    {
+        clear_values();
+        ui->inputDisplay->setText("Ans Does Not Exist");
+        checkAns2 = false;
+        return;
+    }
+
     //check if a value is negative
     if(checkNegative1){
         value1 -= value1 * 2;
@@ -414,9 +441,22 @@ void MainWindow::on_equalsSign_clicked()
         break;
     case multiply:
         answer = value1 * value2;
+        if(answer - (int)answer > 0 && answer - (int)answer <= 0.0001){
+            answer = (int)answer;
+        } else if(answer - (int)answer >= 0.9999 && answer - (int)answer < 1){
+            answer = (int)answer + 1;
+        }
         break;
     case divide:
-        answer = value1 / value2;
+        if(value2 != 0) {
+            answer = value1 / value2;
+            //round to the nearest thousandth
+            answer = std::round(answer * 10000.0) / 10000.0;
+        } else {
+            clear_values();
+            ui->inputDisplay->setText("Cant Divide by Zero");
+            return;
+        }
         break;
     default:
         answer = value1;
@@ -431,6 +471,9 @@ void MainWindow::on_equalsSign_clicked()
         savedCalculations[i] = savedCalculations[i-1];
     }
     savedCalculations[0] = printedNumValue + " = " + QString::number(answer);
+    previousAns = answer;
+    checkAns1 = true;
+    checkAns2 = false;
 
     //print saves
     ui->saveDisplay1->setText(savedCalculations[0]);
@@ -438,13 +481,14 @@ void MainWindow::on_equalsSign_clicked()
     ui->saveDisplay3->setText(savedCalculations[2]);
     ui->saveDisplay4->setText(savedCalculations[3]);
 
-    previousAns = answer;
-
     printedNumValue = "";
     ui->inputDisplay->setText(printedNumValue);
     value1 = 0;
     value2 = 0;
     answer = 0;
     checkOperator = false;
+    zeroCount = false;
+    checkNegative1 = false;
+    checkNegative2 = false;
 }
 
