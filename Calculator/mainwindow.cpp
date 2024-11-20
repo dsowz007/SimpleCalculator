@@ -1,11 +1,14 @@
+// DO NOW
+// do something about checkAns1 and checkAns2
+
 // TODO
+// allow more than 2 values for calculation in one expression (replace value1 & value2 with a vector to cover all values in the expression)
 // simplify fractions and add ability to input fractions
 // sin() cos() and tan() functions
 // optimize code and make it cleaner
 
-//KNOWN PROBLEMS
-//--Using the deleteButton to remove previousAns(Ans) causes unintended behavior
-//  The calculator still thinks Ans is apart of the input instead of removing it
+#include <array>
+#include <vector>
 
 #include "math.h"
 #include "mainwindow.h"
@@ -29,6 +32,11 @@ CalcOperator sign = none;
 QString printedNumValue = "";
 QString valueHalf = "";
 std::array<QString, 4> savedCalculations = {};
+
+// -2 = negative, -1 = Ans, 0-9 = integers
+std::vector<int> firstValues = {};
+std::vector<int> secondValues = {};
+
 double previousAns = 0;
 double value1 = 0;
 double value2 = 0;
@@ -46,23 +54,37 @@ void MainWindow::clear_values(){
     checkNegative1 = false;
     checkNegative2 = false;
     zeroCount = false;
+    firstValues.clear();
+    secondValues.clear();
     value1 = 0;
     value2 = 0;
     printedNumValue = "";
 }
 
+void MainWindow::set_input_display(std::vector<int>& vect){
+    //set printedNumValue to all inputs except for the one deleted (including Ans and '-')
+    for(int i = 0; i < vect.size(); ++i){
+        if(vect[i] == -2){
+            printedNumValue = printedNumValue + '-';
+        } else if(vect[i] == -1) {
+            printedNumValue = printedNumValue + "Ans";
+        } else {
+            printedNumValue = printedNumValue + QString::number(vect[i]);
+        }
+    }
+}
+
 void MainWindow::on_numberOne_clicked()
 {
-    static const int textOne = 1;
-    //previousInput = textOne;
-
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += textOne;
+        value1 += 1;
+        firstValues.push_back(1);
     } else {
         value2 *= 10;
-        value2 += textOne;
+        value2 += 1;
+        secondValues.push_back(1);
     }
 
     printedNumValue = printedNumValue + "1";
@@ -72,16 +94,15 @@ void MainWindow::on_numberOne_clicked()
 
 void MainWindow::on_numberTwo_clicked()
 {
-    static const int textTwo = 2;
-    //previousInput = textTwo;
-
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += textTwo;
+        value1 += 2;
+        firstValues.push_back(2);
     } else {
         value2 *= 10;
-        value2 += textTwo;
+        value2 += 2;
+        secondValues.push_back(2);
     }
 
     printedNumValue = printedNumValue + "2";
@@ -91,16 +112,15 @@ void MainWindow::on_numberTwo_clicked()
 
 void MainWindow::on_numberThree_clicked()
 {
-    static const int textThree = 3;
-    //previousInput = textThree;
-
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += textThree;
+        value1 += 3;
+        firstValues.push_back(3);
     } else {
         value2 *= 10;
-        value2 += textThree;
+        value2 += 3;
+        secondValues.push_back(3);
     }
 
     printedNumValue = printedNumValue + "3";
@@ -110,16 +130,15 @@ void MainWindow::on_numberThree_clicked()
 
 void MainWindow::on_numberFour_clicked()
 {
-    static const int textFour = 4;
-    //previousInput = textFour;
-
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += textFour;
+        value1 += 4;
+        firstValues.push_back(4);
     } else {
         value2 *= 10;
-        value2 += textFour;
+        value2 += 4;
+        secondValues.push_back(4);
     }
 
     printedNumValue = printedNumValue + "4";
@@ -129,16 +148,15 @@ void MainWindow::on_numberFour_clicked()
 
 void MainWindow::on_numberFive_clicked()
 {
-    static const int textFive = 5;
-    //previousInput = textFive;
-
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += textFive;
+        value1 += 5;
+        firstValues.push_back(5);
     } else {
         value2 *= 10;
-        value2 += textFive;
+        value2 += 5;
+        secondValues.push_back(5);
     }
 
     printedNumValue = printedNumValue + "5";
@@ -148,16 +166,15 @@ void MainWindow::on_numberFive_clicked()
 
 void MainWindow::on_numberSix_clicked()
 {
-    static const int textSix = 6;
-   // previousInput = textSix;
-
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += textSix;
+        value1 += 6;
+        firstValues.push_back(6);
     } else {
         value2 *= 10;
-        value2 += textSix;
+        value2 += 6;
+        secondValues.push_back(6);
     }
 
     printedNumValue = printedNumValue + "6";
@@ -167,16 +184,15 @@ void MainWindow::on_numberSix_clicked()
 
 void MainWindow::on_NumberSeven_clicked()
 {
-    static const int textSeven = 7;
-    //previousInput = textSeven;
-
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += textSeven;
+        value1 += 7;
+        firstValues.push_back(7);
     } else {
         value2 *= 10;
-        value2 += textSeven;
+        value2 += 7;
+        secondValues.push_back(7);
     }
 
     printedNumValue = printedNumValue + "7";
@@ -186,16 +202,15 @@ void MainWindow::on_NumberSeven_clicked()
 
 void MainWindow::on_numberEight_clicked()
 {
-    static const int textEight = 8;
-   // previousInput = textEight;
-
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += textEight;
+        value1 += 8;
+        firstValues.push_back(8);
     } else {
         value2 *= 10;
-        value2 += textEight;
+        value2 += 8;
+        secondValues.push_back(8);
     }
 
     printedNumValue = printedNumValue + "8";
@@ -205,16 +220,15 @@ void MainWindow::on_numberEight_clicked()
 
 void MainWindow::on_numberNine_clicked()
 {
-    static const int textNine = 9;
-    //previousInput = textNine;
-
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += textNine;
+        value1 += 9;
+        firstValues.push_back(9);
     } else {
         value2 *= 10;
-        value2 += textNine;
+        value2 += 9;
+        secondValues.push_back(9);
     }
 
     printedNumValue = printedNumValue + "9";
@@ -226,16 +240,16 @@ void MainWindow::on_numberZero_clicked()
 {
     if(value1 == 0 && !checkOperator)
         zeroCount = true;
-    static const int textZero = 0;
-   // previousInput = textZero;
 
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += textZero;
+        value1 += 0;
+        firstValues.push_back(0);
     } else {
         value2 *= 10;
-        value2 += textZero;
+        value2 += 0;
+        firstValues.push_back(0);
     }
 
     printedNumValue = printedNumValue + "0";
@@ -247,9 +261,21 @@ void MainWindow::on_previousAnswerButton_clicked()
     checkAns2 = true;
     //check if value1 or value2
     if(!checkOperator){
-        value1 = previousAns;
+        if(printedNumValue == ""){
+            value1 = previousAns;
+        } else {
+            value1 *= 10;
+            value1 += previousAns;
+        }
+        firstValues.push_back(-1);
     } else {
-        value2 = previousAns;
+        if(printedNumValue == valueHalf){
+            value2 = previousAns;
+        } else {
+            value2 *= 10;
+            value2 += previousAns;
+        }
+        secondValues.push_back(-1);
     }
 
     printedNumValue = printedNumValue + "Ans";
@@ -265,6 +291,7 @@ void MainWindow::on_negativeButton_clicked()
         //check if negitve sign is used properly, if placed in between an input, give Syntax Error
         if(printedNumValue == ""){
             printedNumValue = printedNumValue + '-';
+            firstValues.push_back(-2);
             ui->inputDisplay->setText(printedNumValue);
         } else {
             //reset input
@@ -273,7 +300,6 @@ void MainWindow::on_negativeButton_clicked()
             checkOperator = false;
             sign = none;
             printedNumValue = "";
-            //previousInput = 0;
             value1 = 0;
             value2 = 0;
             ui->inputDisplay->setText("Syntax Error");
@@ -282,6 +308,7 @@ void MainWindow::on_negativeButton_clicked()
         checkNegative2 = true;
         if(valueHalf == printedNumValue){
             printedNumValue = printedNumValue + '-';
+            secondValues.push_back(-2);
             ui->inputDisplay->setText(printedNumValue);
         } else {
             //reset input
@@ -290,7 +317,6 @@ void MainWindow::on_negativeButton_clicked()
             checkOperator = false;
             sign = none;
             printedNumValue = "";
-            //previousInput = 0;
             value1 = 0;
             value2 = 0;
             ui->inputDisplay->setText("Syntax Error");
@@ -300,45 +326,112 @@ void MainWindow::on_negativeButton_clicked()
 
 void MainWindow::on_deleteButton_clicked()
 {
+    //TODO
+    //check if anything is in inputDisplay when pressed, if not, do nothing and return
+    //if()
+
     //reverse previous input
     //check if removeing a number or an operator sign
     if(valueHalf == printedNumValue && checkOperator == true){
+        //removes the operator
         checkOperator = false;
-        if(!checkNegative1){
-            printedNumValue = QString::number(value1);
-        } else {
-            printedNumValue = '-' + QString::number(value1);
-        }
+        sign = none;
+        printedNumValue = "";
+        set_input_display(firstValues);
         ui->inputDisplay->setText(printedNumValue);
     } else if(checkOperator == true) {
-        double previousInput = std::fmod(value2, 10.0);
-        value2 -= previousInput;
-        value2 /= 10.0;
-        if(value2 == 0){
-            checkNegative2 = false;
-            printedNumValue = valueHalf;
+        //removes last input for value2
+
+        //check if removing Ans, negative, or a number
+        if(secondValues.back() != -1 && secondValues.back() != -2){
+            double previousInput = std::fmod(value2, 10.0);
+            value2 -= previousInput;
+            value2 /= 10.0;
+            secondValues.pop_back();
+            if(secondValues.size() == 0){
+                checkNegative2 = false;
+                printedNumValue = valueHalf;
+            } else {
+                printedNumValue = valueHalf;
+                set_input_display(secondValues);
+                ui->inputDisplay->setText(printedNumValue);
+            }
+        } else if(secondValues.back() == -1){
+            //removes Ans at back
+            //check if Ans if is the only thing in value2
+            if(value2 == previousAns){
+                value2 = 0;
+                printedNumValue = valueHalf;
+                secondValues.pop_back();
+                checkAns2 = false;
+                ui->inputDisplay->setText(printedNumValue);
+            } else {
+                secondValues.pop_back();
+                value2 -= previousAns;
+                value2 /= 10;
+                checkAns2 = false;
+
+                printedNumValue = valueHalf;
+                set_input_display(secondValues);
+                ui->inputDisplay->setText(printedNumValue);
+            }
         } else {
-            if(checkNegative2)
-                printedNumValue = valueHalf + '-' + QString::number(value2);
-            else
-                printedNumValue = valueHalf + QString::number(value2);
+            //removes negative sign at back
+            secondValues.pop_back();
+            checkNegative2 = !checkNegative2;
+
+            printedNumValue = valueHalf;
+            set_input_display(secondValues);
+            ui->inputDisplay->setText(printedNumValue);
         }
         ui->inputDisplay->setText(printedNumValue);
     } else {
-        double previousInput = std::fmod(value1, 10.0);
-        value1 -= previousInput;
-        value1 /= 10;
-        //check if the first number was deleted, then reset
-        if(value1 == 0){
-            checkNegative1 = false;
-            zeroCount = false;
-            printedNumValue = "";
-            ui->inputDisplay->setText("");
+        //removes last input for value1
+
+        //check if removing Ans, negative, or a number
+        if(firstValues.back() != -1 && firstValues.back() != -2){
+            //removes number at back
+            double previousInput = std::fmod(value1, 10.0);
+            value1 -= previousInput;
+            value1 /= 10;
+            firstValues.pop_back();
+            //check if the first number was deleted, then reset
+            if(firstValues.size() == 0){
+                checkNegative1 = false;
+                zeroCount = false;
+                printedNumValue = "";
+                ui->inputDisplay->setText("");
+            } else {
+                printedNumValue = "";
+                set_input_display(firstValues);
+                ui->inputDisplay->setText(printedNumValue);
+            }
+        } else if(firstValues.back() == -1){
+            //removes Ans at back
+            //check if Ans is the only thing in value1
+            if(value1 == previousAns){
+                value1 = 0;
+                printedNumValue = "";
+                firstValues.pop_back();
+                checkAns2 = false;
+                ui->inputDisplay->setText(printedNumValue);
+            } else {
+                firstValues.pop_back();
+                value1 -= previousAns;
+                value1 /= 10;
+                checkAns2 = false;
+
+                printedNumValue = "";
+                set_input_display(firstValues);
+                ui->inputDisplay->setText(printedNumValue);
+            }
         } else {
-            if(checkNegative1)
-                printedNumValue = '-' + QString::number(value1);
-            else
-                printedNumValue = QString::number(value1);
+            //removes negative sign at back
+            firstValues.pop_back();
+            checkNegative1 = !checkNegative1;
+
+            printedNumValue = "";
+            set_input_display(firstValues);
             ui->inputDisplay->setText(printedNumValue);
         }
     }
@@ -347,6 +440,7 @@ void MainWindow::on_deleteButton_clicked()
 void MainWindow::on_clearButton_clicked()
 {
     clear_values();
+    checkAns2 = false;
     ui->inputDisplay->setText(printedNumValue);
 }
 
@@ -481,14 +575,6 @@ void MainWindow::on_equalsSign_clicked()
     ui->saveDisplay3->setText(savedCalculations[2]);
     ui->saveDisplay4->setText(savedCalculations[3]);
 
-    printedNumValue = "";
+    clear_values();
     ui->inputDisplay->setText(printedNumValue);
-    value1 = 0;
-    value2 = 0;
-    answer = 0;
-    checkOperator = false;
-    zeroCount = false;
-    checkNegative1 = false;
-    checkNegative2 = false;
 }
-
