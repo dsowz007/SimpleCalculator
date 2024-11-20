@@ -18,6 +18,10 @@ public:
     ~MainWindow();
 
 private slots:
+    void set_input_display(std::vector<int>& vect);
+
+    void clear_values();
+
     void on_numberOne_clicked();
 
     void on_numberTwo_clicked();
