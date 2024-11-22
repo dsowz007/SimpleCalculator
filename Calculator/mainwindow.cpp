@@ -58,7 +58,9 @@ void MainWindow::clear_values(){
     secondValues.clear();
     value1 = 0;
     value2 = 0;
+    answer = 0;
     printedNumValue = "";
+    sign = none;
 }
 
 void MainWindow::set_input_display(std::vector<int>& vect){
@@ -74,16 +76,23 @@ void MainWindow::set_input_display(std::vector<int>& vect){
     }
 }
 
+bool MainWindow::check_for_ans(const std::vector<int>& vect){
+    for(int i : vect){
+        if(i == -1) return true;
+    }
+    return false;
+}
+
 void MainWindow::on_numberOne_clicked()
 {
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += 1;
+        checkNegative1 ? value1 -= 1 : value1 += 1;
         firstValues.push_back(1);
     } else {
         value2 *= 10;
-        value2 += 1;
+        checkNegative2 ? value2 -= 1 : value2 += 1;
         secondValues.push_back(1);
     }
 
@@ -97,11 +106,11 @@ void MainWindow::on_numberTwo_clicked()
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += 2;
+        checkNegative1 ? value1 -= 2 : value1 += 2;
         firstValues.push_back(2);
     } else {
         value2 *= 10;
-        value2 += 2;
+        checkNegative2 ? value2 -= 2 : value2 += 2;
         secondValues.push_back(2);
     }
 
@@ -115,11 +124,11 @@ void MainWindow::on_numberThree_clicked()
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += 3;
+        checkNegative1 ? value1 -= 3 : value1 += 3;
         firstValues.push_back(3);
     } else {
         value2 *= 10;
-        value2 += 3;
+        checkNegative2 ? value2 -= 3 : value2 += 3;
         secondValues.push_back(3);
     }
 
@@ -133,11 +142,11 @@ void MainWindow::on_numberFour_clicked()
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += 4;
+        checkNegative1 ? value1 -= 4 : value1 += 4;
         firstValues.push_back(4);
     } else {
         value2 *= 10;
-        value2 += 4;
+        checkNegative2 ? value2 -= 4 : value2 += 4;
         secondValues.push_back(4);
     }
 
@@ -151,11 +160,11 @@ void MainWindow::on_numberFive_clicked()
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += 5;
+        checkNegative1 ? value1 -= 5 : value1 += 5;
         firstValues.push_back(5);
     } else {
         value2 *= 10;
-        value2 += 5;
+        checkNegative2 ? value2 -= 5 : value2 += 5;
         secondValues.push_back(5);
     }
 
@@ -169,11 +178,11 @@ void MainWindow::on_numberSix_clicked()
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += 6;
+        checkNegative1 ? value1 -= 6 : value1 += 6;
         firstValues.push_back(6);
     } else {
         value2 *= 10;
-        value2 += 6;
+        checkNegative2 ? value2 -= 6 : value2 += 6;
         secondValues.push_back(6);
     }
 
@@ -187,11 +196,11 @@ void MainWindow::on_NumberSeven_clicked()
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += 7;
+        checkNegative1 ? value1 -= 7 : value1 += 7;
         firstValues.push_back(7);
     } else {
         value2 *= 10;
-        value2 += 7;
+        checkNegative2 ? value2 -= 7 : value2 += 7;
         secondValues.push_back(7);
     }
 
@@ -205,11 +214,11 @@ void MainWindow::on_numberEight_clicked()
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += 8;
+        checkNegative1 ? value1 -= 8 : value1 += 8;
         firstValues.push_back(8);
     } else {
         value2 *= 10;
-        value2 += 8;
+        checkNegative2 ? value2 -= 8 : value2 += 8;
         secondValues.push_back(8);
     }
 
@@ -223,11 +232,11 @@ void MainWindow::on_numberNine_clicked()
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += 9;
+        checkNegative1 ? value1 -= 9 : value1 += 9;
         firstValues.push_back(9);
     } else {
         value2 *= 10;
-        value2 += 9;
+        checkNegative2 ? value2 -= 9 : value2 += 9;
         secondValues.push_back(9);
     }
 
@@ -244,11 +253,9 @@ void MainWindow::on_numberZero_clicked()
     //check if value1 or value2
     if(!checkOperator){
         value1 *= 10;
-        value1 += 0;
         firstValues.push_back(0);
     } else {
         value2 *= 10;
-        value2 += 0;
         firstValues.push_back(0);
     }
 
@@ -326,9 +333,14 @@ void MainWindow::on_negativeButton_clicked()
 
 void MainWindow::on_deleteButton_clicked()
 {
-    //TODO
     //check if anything is in inputDisplay when pressed, if not, do nothing and return
-    //if()
+    if(firstValues.size() <= 0) return;
+    if(firstValues.size() <= 0 && secondValues.size() <= 0 && checkOperator == true){
+        //removes the operator
+        clear_values();
+        printedNumValue = "";
+        ui->inputDisplay->setText(printedNumValue);
+    }
 
     //reverse previous input
     //check if removeing a number or an operator sign
@@ -466,8 +478,14 @@ void MainWindow::on_plusSign_clicked()
 {
     sign = plus;
     checkOperator = true;
-    if(!zeroCount && value1 == 0 && !checkAns2)
+    if(!zeroCount && value1 == 0 && !checkAns2 && checkAns1){
+        printedNumValue = "Ans";
+        value1 = previousAns;
+        firstValues.push_back(-1);
+    } else if(!zeroCount && value1 == 0 && !checkAns2){
         printedNumValue = '0';
+        firstValues.push_back(0);
+    }
     printedNumValue = printedNumValue + " + ";
     valueHalf = printedNumValue;
     ui->inputDisplay->setText(printedNumValue);
@@ -477,8 +495,12 @@ void MainWindow::on_minusSign_clicked()
 {
     sign = minus;
     checkOperator = true;
-    if(!zeroCount && value1 == 0)
+    if(!zeroCount && value1 == 0 && !checkAns2 && checkAns1){
+        printedNumValue = "Ans";
+        value1 = previousAns;
+    } else if(!zeroCount && value1 == 0 && !checkAns2){
         printedNumValue = '0';
+    }
     printedNumValue = printedNumValue + " - ";
     valueHalf = printedNumValue;
     ui->inputDisplay->setText(printedNumValue);
@@ -488,8 +510,12 @@ void MainWindow::on_multiplySign_clicked()
 {
     sign = multiply;
     checkOperator = true;
-    if(!zeroCount && value1 == 0)
+    if(!zeroCount && value1 == 0 && !checkAns2 && checkAns1){
+        printedNumValue = "Ans";
+        value1 = previousAns;
+    } else if(!zeroCount && value1 == 0 && !checkAns2){
         printedNumValue = '0';
+    }
     printedNumValue = printedNumValue + " x ";
     valueHalf = printedNumValue;
     ui->inputDisplay->setText(printedNumValue);
@@ -499,8 +525,12 @@ void MainWindow::on_divideSign_clicked()
 {
     sign = divide;
     checkOperator = true;
-    if(!zeroCount && value1 == 0)
+    if(!zeroCount && value1 == 0 && !checkAns2 && checkAns1){
+        printedNumValue = "Ans";
+        value1 = previousAns;
+    } else if(!zeroCount && value1 == 0 && !checkAns2){
         printedNumValue = '0';
+    }
     printedNumValue = printedNumValue + " ÷ ";
     valueHalf = printedNumValue;
     ui->inputDisplay->setText(printedNumValue);
@@ -513,6 +543,19 @@ void MainWindow::on_equalsSign_clicked()
     {
         clear_values();
         ui->inputDisplay->setText("Ans Does Not Exist");
+        checkAns2 = false;
+        return;
+    }
+
+    if(firstValues.size() > 1 && check_for_ans(firstValues) == true && firstValues.front() != -2){
+        clear_values();
+        ui->inputDisplay->setText("Syntax Error");
+        checkAns2 = false;
+        return;
+    }
+    if(secondValues.size() > 1 && check_for_ans(secondValues) == true && secondValues.front() != -2){
+        clear_values();
+        ui->inputDisplay->setText("Syntax Error");
         checkAns2 = false;
         return;
     }
@@ -535,9 +578,9 @@ void MainWindow::on_equalsSign_clicked()
         break;
     case multiply:
         answer = value1 * value2;
-        if(answer - (int)answer > 0 && answer - (int)answer <= 0.0001){
+        if(answer - (int)answer > 0 && answer - (int)answer <= 0.0005){
             answer = (int)answer;
-        } else if(answer - (int)answer >= 0.9999 && answer - (int)answer < 1){
+        } else if(answer - (int)answer >= 0.9995 && answer - (int)answer < 1){
             answer = (int)answer + 1;
         }
         break;
@@ -557,9 +600,6 @@ void MainWindow::on_equalsSign_clicked()
         break;
     }
 
-    //savedEquation1 = printedNumValue + " = " + QString::number(answer);
-    //ui->saveDisplay1->setText(savedEquation1);
-
     //in decending order, move savedCalculations[i-1] forward 1 until input replaces save1
     for(int i = savedCalculations.size() - 1; i > 0; --i){
         savedCalculations[i] = savedCalculations[i-1];
@@ -578,3 +618,4 @@ void MainWindow::on_equalsSign_clicked()
     clear_values();
     ui->inputDisplay->setText(printedNumValue);
 }
+
