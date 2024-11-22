@@ -371,17 +371,23 @@ void MainWindow::on_deleteButton_clicked()
         } else if(secondValues.back() == -1){
             //removes Ans at back
             //check if Ans if is the only thing in value2
-            if(value2 == previousAns){
+            if(value2 == previousAns && !checkNegative2){
                 value2 = 0;
                 printedNumValue = valueHalf;
                 secondValues.pop_back();
-                checkAns2 = false;
+                check_for_ans(secondValues) ? checkAns2 = true : checkAns2 = false;
+                ui->inputDisplay->setText(printedNumValue);
+            } else if(value2 == previousAns && checkNegative2) {
+                value2 = 0;
+                printedNumValue = valueHalf + '-';
+                secondValues.pop_back();
+                check_for_ans(secondValues) ? checkAns2 = true : checkAns2 = false;
                 ui->inputDisplay->setText(printedNumValue);
             } else {
                 secondValues.pop_back();
                 value2 -= previousAns;
                 value2 /= 10;
-                checkAns2 = false;
+                check_for_ans(secondValues) ? checkAns2 = true : checkAns2 = false;
 
                 printedNumValue = valueHalf;
                 set_input_display(secondValues);
@@ -421,17 +427,23 @@ void MainWindow::on_deleteButton_clicked()
         } else if(firstValues.back() == -1){
             //removes Ans at back
             //check if Ans is the only thing in value1
-            if(value1 == previousAns){
+            if(value1 == previousAns && !checkNegative1){
                 value1 = 0;
                 printedNumValue = "";
                 firstValues.pop_back();
-                checkAns2 = false;
+                check_for_ans(firstValues) ? checkAns2 = true : checkAns2 = false;
+                ui->inputDisplay->setText(printedNumValue);
+            } else if(value1 == previousAns && checkNegative1) {
+                value1 = 0;
+                printedNumValue = '-';
+                firstValues.pop_back();
+                check_for_ans(firstValues) ? checkAns2 = true : checkAns2 = false;
                 ui->inputDisplay->setText(printedNumValue);
             } else {
                 firstValues.pop_back();
                 value1 -= previousAns;
                 value1 /= 10;
-                checkAns2 = false;
+                check_for_ans(firstValues) ? checkAns2 = true : checkAns2 = false;
 
                 printedNumValue = "";
                 set_input_display(firstValues);
