@@ -6,16 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>334</width>
-    <height>613</height>
+    <width>441</width>
+    <height>630</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
      <widget class="QFrame" name="mainFrame">
       <property name="styleSheet">
        <string notr="true">QFrame {
@@ -76,63 +76,71 @@
              <number>6</number>
             </property>
             <item>
-             <widget class="QLabel" name="saveDisplay4">
+             <widget class="QScrollArea" name="scrollSaveArea">
               <property name="styleSheet">
-               <string notr="true">QLabel {
+               <string notr="true">QScrollArea {
 	border: 0px;
 }</string>
               </property>
-              <property name="text">
-               <string/>
+              <property name="frameShape">
+               <enum>QFrame::Shape::NoFrame</enum>
               </property>
-              <property name="indent">
-               <number>10</number>
+              <property name="widgetResizable">
+               <bool>true</bool>
               </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="saveDisplay3">
-              <property name="styleSheet">
-               <string notr="true">QLabel {
+              <widget class="QWidget" name="scrollAreaWidgetContents">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>375</width>
+                 <height>248</height>
+                </rect>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_4">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QWidget" name="savesWidget" native="true">
+                  <property name="styleSheet">
+                   <string notr="true">QWidget {
 	border: 0px;
 }</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="indent">
-               <number>10</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="saveDisplay2">
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-	border: 0px;
-}</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="indent">
-               <number>10</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="saveDisplay1">
-              <property name="styleSheet">
-               <string notr="true">QLabel {
-	border: 0px;
-}</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="indent">
-               <number>10</number>
-              </property>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_5">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
              </widget>
             </item>
             <item>
@@ -602,7 +610,7 @@ QPushButton:hover{
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>334</width>
+     <width>441</width>
      <height>21</height>
     </rect>
    </property>
