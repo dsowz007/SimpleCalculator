@@ -1,4 +1,6 @@
 // DO NOW
+// fix the saves scroll bar not scrolling down all the way after an answer is entered
+// fix bug where Ans multiplied by a negative number does not give a negative answer
 // do something about checkAns1 and checkAns2
 
 // TODO
@@ -7,12 +9,20 @@
 // sin() cos() and tan() functions
 // optimize code and make it cleaner
 
-#include <array>
+//#include <array>
 #include <vector>
 
 #include "math.h"
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+
+#include <QLabel>
+#include <QScrollArea>
+#include <QScrollBar>
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <QAbstractButton>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -26,12 +36,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
 enum CalcOperator {none, plus, minus, multiply, divide};
 
 CalcOperator sign = none;
 QString printedNumValue = "";
 QString valueHalf = "";
-std::array<QString, 4> savedCalculations = {};
+//std::array<QString, 4> savedCalculations = {};
 
 // -2 = negative, -1 = Ans, 0-9 = integers
 std::vector<int> firstValues = {};
@@ -61,6 +72,23 @@ void MainWindow::clear_values(){
     answer = 0;
     printedNumValue = "";
     sign = none;
+}
+
+void MainWindow::clear_saves(){
+    //get container widget inside the QScrollArea
+    QWidget *container = ui->scrollSaveArea->widget();
+
+    //get the layout of the container
+    QVBoxLayout *layout = qobject_cast<QVBoxLayout*>(container->layout());
+
+    //revmove all widgets from the layout
+    while(QLayoutItem *item = layout->takeAt(0)) {
+        QWidget *widget = item->widget();
+        if (widget) {
+            widget->deleteLater(); // Delete the widget
+        }
+        delete item; // Delete the layout item
+    }
 }
 
 void MainWindow::set_input_display(std::vector<int>& vect){
@@ -471,19 +499,11 @@ void MainWindow::on_clearButton_clicked()
 void MainWindow::on_allClearButton_clicked()
 {
     clear_values();
+    clear_saves();
     previousAns = 0;
     checkAns1 = false;
     checkAns2 = false;
     ui->inputDisplay->setText(printedNumValue);
-
-    for(int i = 0; i < savedCalculations.size(); ++i){
-        savedCalculations[i] = "";
-    }
-
-    ui->saveDisplay1->setText(savedCalculations[0]);
-    ui->saveDisplay2->setText(savedCalculations[1]);
-    ui->saveDisplay3->setText(savedCalculations[2]);
-    ui->saveDisplay4->setText(savedCalculations[3]);
 }
 
 void MainWindow::on_plusSign_clicked()
@@ -612,20 +632,25 @@ void MainWindow::on_equalsSign_clicked()
         break;
     }
 
-    //in decending order, move savedCalculations[i-1] forward 1 until input replaces save1
-    for(int i = savedCalculations.size() - 1; i > 0; --i){
-        savedCalculations[i] = savedCalculations[i-1];
-    }
-    savedCalculations[0] = printedNumValue + " = " + QString::number(answer);
+    //create new label for previous save
+    QLabel *newLabel = new QLabel(printedNumValue + " = " + QString::number(answer));
+    QWidget *container = ui->scrollSaveArea->widget();
+    container->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+
+    QVBoxLayout *layout = qobject_cast<QVBoxLayout*>(container->layout());
+    layout->setAlignment(Qt::AlignBottom);
+    newLabel->setContentsMargins(9, 0, 9, 0);
+    layout->setSpacing(10);
+    layout->addWidget(newLabel);
+
+
+
+    QScrollBar *vScrollBar = ui->scrollSaveArea->verticalScrollBar();
+    vScrollBar->setValue(vScrollBar->maximum());
+
     previousAns = answer;
     checkAns1 = true;
     checkAns2 = false;
-
-    //print saves
-    ui->saveDisplay1->setText(savedCalculations[0]);
-    ui->saveDisplay2->setText(savedCalculations[1]);
-    ui->saveDisplay3->setText(savedCalculations[2]);
-    ui->saveDisplay4->setText(savedCalculations[3]);
 
     clear_values();
     ui->inputDisplay->setText(printedNumValue);
