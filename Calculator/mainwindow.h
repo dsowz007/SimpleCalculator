@@ -28,6 +28,8 @@ private slots:
 
     bool check_for_ans(const std::vector<int>& vect);
 
+    void process_number_input(int num);
+
     void on_numberOne_clicked();
 
     void on_numberTwo_clicked();
@@ -70,5 +72,23 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    //initialize variables for mainwindow.cpp
+    QString printedNumValue = "";
+    QString valueHalf = "";
+
+    std::vector<int> firstValues = {};
+    std::vector<int> secondValues = {};
+
+    double previousAns = 0;
+    double value1 = 0;
+    double value2 = 0;
+    double answer = 0;
+    bool zeroCount = false;
+    bool checkAns1 = false;
+    bool checkAns2 = false;
+    bool checkNegative1 = false;
+    bool checkNegative2 = false;
+    bool checkOperator = false;
 };
 #endif // MAINWINDOW_H
