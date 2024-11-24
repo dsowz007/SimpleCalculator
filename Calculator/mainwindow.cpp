@@ -1,6 +1,5 @@
 // DO NOW
 // fix the saves scroll bar not scrolling down all the way after an answer is entered
-// fix bug where Ans multiplied by a negative number does not give a negative answer
 // do something about checkAns1 and checkAns2
 
 // TODO
@@ -9,7 +8,6 @@
 // sin() cos() and tan() functions
 // optimize code and make it cleaner
 
-//#include <array>
 #include <vector>
 
 #include "math.h"
@@ -89,6 +87,17 @@ void MainWindow::clear_saves(){
         }
         delete item; // Delete the layout item
     }
+}
+
+void MainWindow::update_save_display(){
+    QLabel *newLabel = new QLabel(printedNumValue + " = " + QString::number(answer));
+    QWidget *container = ui->scrollSaveArea->widget();
+
+    QVBoxLayout *layout = qobject_cast<QVBoxLayout*>(container->layout());
+    layout->setAlignment(Qt::AlignBottom);
+    newLabel->setContentsMargins(9, 0, 9, 0);
+    layout->setSpacing(10);
+    layout->addWidget(newLabel);
 }
 
 void MainWindow::set_input_display(std::vector<int>& vect){
@@ -593,10 +602,10 @@ void MainWindow::on_equalsSign_clicked()
     }
 
     //check if a value is negative
-    if(checkNegative1){
+    if(checkNegative1 && value1 > 0){
         value1 -= value1 * 2;
     }
-    if(checkNegative2){
+    if(checkNegative2 && value2 > 0){
         value2 -= value2 * 2;
     }
 
@@ -633,17 +642,7 @@ void MainWindow::on_equalsSign_clicked()
     }
 
     //create new label for previous save
-    QLabel *newLabel = new QLabel(printedNumValue + " = " + QString::number(answer));
-    QWidget *container = ui->scrollSaveArea->widget();
-    container->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-
-    QVBoxLayout *layout = qobject_cast<QVBoxLayout*>(container->layout());
-    layout->setAlignment(Qt::AlignBottom);
-    newLabel->setContentsMargins(9, 0, 9, 0);
-    layout->setSpacing(10);
-    layout->addWidget(newLabel);
-
-
+    update_save_display();
 
     QScrollBar *vScrollBar = ui->scrollSaveArea->verticalScrollBar();
     vScrollBar->setValue(vScrollBar->maximum());
@@ -654,5 +653,7 @@ void MainWindow::on_equalsSign_clicked()
 
     clear_values();
     ui->inputDisplay->setText(printedNumValue);
+
+    previousAns < 0 ? checkNegative1 = true : checkNegative1 = false;
 }
 
