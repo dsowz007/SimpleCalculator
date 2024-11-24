@@ -35,7 +35,7 @@ MainWindow::~MainWindow()
 }
 
 enum CalcOperator {none, plus, minus, multiply, divide};
-enum SpecialCalues {negative = -2, ans = -1};
+enum SpecialValues {negative = -2, ans = -1};
 
 CalcOperator sign = none;
 
