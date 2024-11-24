@@ -24,6 +24,8 @@ private slots:
 
     void clear_saves();
 
+    void update_save_display();
+
     bool check_for_ans(const std::vector<int>& vect);
 
     void on_numberOne_clicked();
