@@ -16,7 +16,6 @@
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QWidget>
-#include <QLabel>
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QAbstractButton>
