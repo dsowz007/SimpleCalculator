@@ -26,6 +26,10 @@ private slots:
 
     void update_save_display();
 
+    void update_and_scroll();
+
+    void delete_last_label();
+
     bool check_for_ans(const std::vector<int>& vect);
 
     void process_number_input(int num);
@@ -74,6 +78,10 @@ private:
     Ui::MainWindow *ui;
 
     //initialize variables for mainwindow.cpp
+
+    //keep track of most recent created label in saves
+    QLabel* lastLabel = nullptr;
+
     QString printedNumValue = "";
     QString valueHalf = "";
 
