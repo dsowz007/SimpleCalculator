@@ -13,7 +13,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-#include <QLabel>
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QWidget>
@@ -68,17 +67,55 @@ void MainWindow::clear_saves(){
         }
         delete item; // Delete the layout item
     }
+
+    //clear lastLabel as all labels are deleted
+    lastLabel = nullptr;
 }
 
 void MainWindow::update_save_display(){
     QLabel *newLabel = new QLabel(printedNumValue + " = " + QString::number(answer));
     QWidget *container = ui->scrollSaveArea->widget();
 
+    //safety check
     QVBoxLayout *layout = qobject_cast<QVBoxLayout*>(container->layout());
+    if(!layout) {
+        delete newLabel;
+        return;
+    }
+
     layout->setAlignment(Qt::AlignBottom);
     newLabel->setContentsMargins(9, 0, 9, 0);
     layout->setSpacing(10);
+
+    //add newLabel to layout
     layout->addWidget(newLabel);
+
+    lastLabel = newLabel;
+}
+
+void MainWindow::update_and_scroll(){
+    //create new label for previous save
+    update_save_display();
+
+    //scroll to bottom of saves
+    QScrollBar *vScrollBar = ui->scrollSaveArea->verticalScrollBar();
+    vScrollBar->setValue(vScrollBar->maximum());
+}
+
+void MainWindow::delete_last_label(){
+    if(lastLabel){
+        QWidget *container = ui->scrollSaveArea->widget();
+        QVBoxLayout *layout = qobject_cast<QVBoxLayout*>(container->layout());
+
+        //remove the label from the layout
+        layout->removeWidget(lastLabel);
+
+        //manually delete the label
+        lastLabel->deleteLater();
+
+        //clear the pointer
+        lastLabel = nullptr;
+    }
 }
 
 void MainWindow::set_input_display(std::vector<int>& vect){
@@ -486,11 +523,8 @@ void MainWindow::on_equalsSign_clicked()
         break;
     }
 
-    //create new label for previous save
-    update_save_display();
-
-    QScrollBar *vScrollBar = ui->scrollSaveArea->verticalScrollBar();
-    vScrollBar->setValue(vScrollBar->maximum());
+    //create a new label for the previous save
+    update_and_scroll();
 
     previousAns = answer;
     checkAns1 = true;
